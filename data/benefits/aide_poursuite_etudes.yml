@@ -1,0 +1,9 @@
+label: Aide à la poursuite d'études
+institution: etat
+description: La région Bretagne soutient les jeunes dans la poursuite de leurs études.
+conditions:
+  - Avoir moins de 25 ans au 15 septembre de l’année scolaire concernée
+  - Ne plus être à charge de ses parents au regard des prestations sociales
+link: https://portesdebretagne.msa.fr/lfy/aide-a-la-poursuite-d-etudes
+type: float
+entity: individus
