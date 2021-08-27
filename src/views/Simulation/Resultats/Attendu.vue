@@ -236,6 +236,10 @@ export default {
       shortDescription: null,
       showConsentNotice: false,
       submitting: false,
+      institutions: {
+        ...Institution.partenairesLocaux,
+        ...Institution.prestationsNationales,
+      },
     }
   },
   computed: {
@@ -327,16 +331,21 @@ export default {
         content,
       }
     },
-    async getContributionFiles(id, filename) {
-      const response = await fetch(
-        `https://raw.githubusercontent.com/betagouv/aides-jeunes/${id}/data/benefits/${filename}.yml`
-      )
-      const blob = await response.blob()
-      const text = await blob.text()
-      const benefit = load(text, { encoding: "utf-8" })
-      const provider =
-        Institution.partenairesLocaux[benefit.institution] ||
-        Institution.prestationsNationales[benefit.institution]
+    mapBenefit(benefit) {
+      if (provider) {
+        // Todo : gérer le cas où l'aide n'a aucune institution et/ou l'institution est en PR sur Github
+        benefit.provider = Object.assign({}, provider)
+        this.benefits.push(benefit)
+        this.benefitKeyed[benefit.id] = benefit
+      }
+    },
+    async fetchInstitution(fileAttribute) {
+      const institution = await this.getGithubPRFiles(fileAttribute)
+      if (institution) this.institutions.push(institution)
+    },
+    async fetchBenefit(fileAttribute) {
+      const benefit = await this.getGithubPRFiles(fileAttribute)
+      const provider = this.institutions[benefit.institution]
       if (provider) {
         benefit.provider = Object.assign({}, provider)
         this.benefits.push(benefit)
@@ -344,9 +353,30 @@ export default {
       }
       // Todo : gérer le cas où l'aide n'a aucune institution et/ou l'institution est en PR sur Github
     },
+    async getGithubPRFiles({ sha, folder, filename }) {
+      const response = await fetch(
+        `https://raw.githubusercontent.com/betagouv/aides-jeunes/${sha}/data/${folder}/${filename}`
+      )
+      const blob = await response.blob()
+      const text = await blob.text()
+      const data = load(text, { encoding: "utf-8" })
+      return data
+    },
+
     copyToClipboard() {
       this.$refs["aj-textarea-results"].select()
       document.execCommand("copy")
+    },
+    reduceContributions(acc, contribution, type) {
+      const splitLabel = contribution.head.label.split("/")
+      if (splitLabel[1] === type) {
+        acc.push({
+          sha: contribution.head.sha,
+          filename: splitLabel[2] + ".yml",
+          folder: type,
+        })
+      }
+      return acc
     },
     fetchContributions() {
       let contributions = []
@@ -360,16 +390,29 @@ export default {
           }
         })
         .then(() => {
+          const institutions = contributions.reduce(
+            (acc, contribution) =>
+              this.reduceContributions(acc, contribution, "institutions"),
+            []
+          )
+          const benefits = contributions.reduce(
+            (acc, contribution) =>
+              this.reduceContributions(acc, contribution, "benefits"),
+            []
+          )
           if (contributions) {
-            let promises = []
-            contributions.forEach((contribution) => {
-              let filename = contribution.head.label.split("/")[2]
-              promises.push(
-                this.getContributionFiles(contribution.head.sha, filename)
-              )
+            const institutionsPromises = []
+            const benefitsPromises = []
+            institutions.forEach((institution) => {
+              institutionsPromises.push(this.fetchInstitution(institution))
             })
-            Promise.all(promises).then(() => {
-              this.benefits = sortBy(this.benefits, "label")
+            Promise.all(institutionsPromises).then(() => {
+              benefits.forEach((benefit) => {
+                benefitsPromises.push(this.fetchBenefit(benefit))
+              })
+              Promise.all(benefitsPromises).then(() => {
+                this.benefits = sortBy(this.benefits, "label")
+              })
             })
           }
         })
