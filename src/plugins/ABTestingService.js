@@ -26,8 +26,11 @@ const ABTestingService = {
     // // et libérer une custom variable
     // // ABTesting.link.deleted = true;
 
-    ABTesting.submit = ABTesting.submit || { index: 1 }
-    ABTesting.submit.deleted = true
+    // ABTesting.submit = ABTesting.submit || { index: 1 }
+    // ABTesting.submit.deleted = true
+
+    ABTesting.dates_job_logement = ABTesting.dates_job_logement || { index: 1 }
+    ABTesting.dates_job_logement.value = ABTesting.dates_job_logement.value || (Math.random() > 0.5 ? 'explicit' : 'boolean');
 
     Object.keys(ABTesting).forEach(function (name) {
       const data = ABTesting[name]

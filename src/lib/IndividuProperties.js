@@ -1,6 +1,8 @@
 import Individu from "@/lib/Individu"
 import { isRelevant, yearsAgo } from "@/lib/Utils"
 import Scolarite from "@/lib/Scolarite"
+import ABTestingService from "@/plugins/ABTestingService"
+
 
 const loadEntity = (component) => {
   const params = component.$route.params
@@ -188,6 +190,10 @@ const STEPS = {
 
   contrat_de_travail_debut: {
     question: (component) => {
+      const abtesting = ABTestingService.getEnvironment()
+
+      // abtesting.dates_job_logement == 'explicit' ...
+
       return component.entity.alternant
         ? "Quand avez-vous commencé votre alternance ?"
         : "Quand avez-vous commencé votre contrat de travail ?"
