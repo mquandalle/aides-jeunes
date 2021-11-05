@@ -4,7 +4,7 @@ const Ressource = require("@/../lib/ressource")
 const { datesGenerator } = require("../../../lib/Benefits/Compute")
 const { Step, ComplexStep } = require("./steps")
 
-function individuBlockFactory(id) {
+function individuBlockFactory(id, chapter) {
   const r = (variable, chapter) =>
     new Step({ entity: "individu", id, variable, chapter })
   const conjoint = id == "conjoint"
@@ -18,7 +18,7 @@ function individuBlockFactory(id) {
       {},
     steps: [
       ...(enfant ? [r("_firstName")] : []),
-      r("date_naissance", demandeur ? "profil" : undefined),
+      r("date_naissance", demandeur ? "profil" : chapter),
       r("nationalite"),
       ...(conjoint ? [r("statut_marital")] : []),
       ...(enfant ? [r("garde_alternee")] : []),
@@ -303,17 +303,14 @@ function extraBlock() {
 function kidBlock(situation) {
   return {
     steps: [
-      new Step({ entity: "enfants", chapter: "foyer" }),
       ...(situation.enfants && situation.enfants.length
         ? situation.enfants.map((e) => {
             return {
-              steps: [
-                individuBlockFactory(e.id),
-                new Step({ entity: "enfants", key: `enfants#${e.id}` }),
-              ],
+              steps: [individuBlockFactory(e.id, "foyer")],
             }
           })
         : []),
+      new Step({ entity: "enfants", chapter: "foyer" }),
     ],
   }
 }
@@ -322,7 +319,11 @@ function housingBlock() {
   return {
     subject: (situation) => situation.menage,
     steps: [
-      new Step({ entity: "logement", chapter: "logement" }),
+      new Step({
+        entity: "menage",
+        chapter: "logement",
+        variable: "statut_occupation_logement",
+      }),
       {
         isActive: (subject) =>
           subject.statut_occupation_logement !== "proprietaire" &&
@@ -361,6 +362,8 @@ function housingBlock() {
         steps: [
           new ComplexStep({
             route: "menage/loyer",
+            entity: "menage",
+            variable: "loyer",
             variables: [
               { entity: "menage", variable: "loyer" },
               { entity: "menage", variable: "charges_locatives" },
@@ -431,12 +434,18 @@ function resourceBlocks(situation) {
         new ComplexStep({
           route: `individu/${individuId}/ressources/types`,
           chapter: "revenus",
+          entity: "individu",
+          variable: "ressources",
+          id: individuId,
         }),
       ].concat(
         Ressource.getIndividuRessourceCategories(individu, situation).map(
           (category) =>
             new ComplexStep({
               route: `individu/${individuId}/ressources/montants/${category}`,
+              entity: "individu",
+              variable: category,
+              id: individuId,
             })
         )
       ),
@@ -447,7 +456,13 @@ function resourceBlocks(situation) {
       individuResourceBlock("demandeur"),
       ...(situation.conjoint ? [individuResourceBlock("conjoint")] : []),
       ...(situation.enfants && situation.enfants.length
-        ? [new Step({ entity: "enfants", variable: "ressources" })]
+        ? [
+            new Step({
+              entity: "individu",
+              variable: "_hasRessources",
+              id: "enfants",
+            }),
+          ]
         : []),
       {
         steps: situation.enfants
