@@ -75,6 +75,10 @@ const individu = Object.assign(
     _bourseCriteresSociauxCommuneDomicileFamilial: String,
     _bourseCriteresSociauxCommuneDomicileFamilialCodePostal: String,
     _bourseCriteresSociauxCommuneDomicileFamilialNomCommune: String,
+    categorie_salarie: {
+      type: String,
+      enum: ["public_non_titulaire", "prive_non_cadre"],
+    },
     _continuite_etudes: Boolean,
     _contrat_alternant: {
       type: String,

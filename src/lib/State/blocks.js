@@ -66,7 +66,7 @@ function individuBlockFactory(id) {
                 r("alternant"),
                 {
                   isActive: (subject) => subject.alternant,
-                  steps: [r("_contrat_alternant")],
+                  steps: [r("_contrat_alternant"), r("categorie_salarie")],
                 },
               ],
             },
