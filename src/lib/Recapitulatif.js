@@ -157,15 +157,22 @@ export const COMPLEX_STEPS = {
       const category = ressourceCategories.find(
         (category) => category.id === categoryId
       )
-      const result = [
-        {
-          isChapterSubtitle: true,
-          label: category && capitalize(category.label(individu)),
-          value: "",
-        },
-        ...ressourceTypes
-          .filter((type) => type.category === categoryId && ressources[type.id])
-          .map((type) => {
+      const categoryRessources = ressourceTypes.filter(
+        (type) =>
+          type.category === categoryId &&
+          ressources[type.id] &&
+          Object.values(individu[type.id]).every((value) => value !== null)
+      )
+
+      let result = []
+      if (categoryRessources.length) {
+        result = [
+          {
+            isChapterSubtitle: true,
+            label: category && capitalize(category.label(individu)),
+            value: "",
+          },
+          ...categoryRessources.map((type) => {
             return {
               label: capitalize(type.label),
               value: Object.entries(individu[type.id]).reduce(
@@ -177,7 +184,9 @@ export const COMPLEX_STEPS = {
               ),
             }
           }),
-      ]
+        ]
+      }
+
       return result
     },
   },
