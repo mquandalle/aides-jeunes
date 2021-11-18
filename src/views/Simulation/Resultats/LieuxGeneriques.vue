@@ -120,7 +120,7 @@ export default {
     }
   },
   beforeDestroy: function () {
-    this.stopSubscription && this.stopSubscription()
+    this.stopSubscription?.()
   },
   methods: {
     getEtablissementsTypesBySituation() {

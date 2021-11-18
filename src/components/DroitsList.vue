@@ -104,7 +104,7 @@ export default {
   methods: {
     longCta: function (benefit) {
       return `Comment obtenir ${benefit.prefix}${
-        benefit.prefix && benefit.prefix.endsWith("’") ? "" : " "
+        benefit.prefix?.endsWith("’") ? "" : " "
       }${benefit.label} ?`
     },
 

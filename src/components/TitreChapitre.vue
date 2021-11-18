@@ -42,7 +42,7 @@ export default {
       const step =
         this.$store.getters.passSanityCheck &&
         this.$state.current(current, this.$store.getters.getAllSteps)
-      const chapterName = (step && step.chapter) || ""
+      const chapterName = step?.chapter || ""
       return Chapters.getLabel(chapterName)
     },
     goToRecapitulatifPage() {

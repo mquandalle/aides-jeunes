@@ -18,12 +18,11 @@ const StateService = {
             VueRouter.NavigationFailureType.cancelled
           )
         ) {
-          this.$matomo &&
-            this.$matomo.trackEvent(
-              "Parcours",
-              "Navigation cancelled",
-              failure.toString()
-            )
+          this.$matomo?.trackEvent(
+            "Parcours",
+            "Navigation cancelled",
+            failure.toString()
+          )
         } else {
           throw new Error(failure)
         }

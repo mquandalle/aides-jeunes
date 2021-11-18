@@ -108,7 +108,7 @@ export default {
           source[categorieRnc.id] || {}
         )
         individu.values[categorieRnc.id][fiscalYear] =
-          source[categorieRnc.id] && source[categorieRnc.id][fiscalYear]
+          source[categorieRnc.id]?.[fiscalYear]
         individu.default[categorieRnc.id] = getDefaultValue(
           this.$store.state.dates.last12Months,
           source,
@@ -122,7 +122,7 @@ export default {
           categoriesRnc.map(
             (ressource) =>
               source[ressource.id] &&
-              source[ressource.id][fiscalYear] !== undefined
+              source[ressource.id]?.[fiscalYear] !== undefined
           )
         )
       return individu

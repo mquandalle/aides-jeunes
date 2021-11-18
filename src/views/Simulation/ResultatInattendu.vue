@@ -65,7 +65,7 @@ export default {
     },
     longLabel: function () {
       let prefix = `${this.droit.prefix}${
-        this.droit.prefix && this.droit.prefix.endsWith("’") ? "" : " "
+        this.droit.prefix?.endsWith("’") ? "" : " "
       }`
       return `${prefix}${this.droit.label}`
     },

@@ -11,7 +11,7 @@
     <p v-if="retrievingCommunes"
       ><i class="fa fa-spinner fa-spin" aria-hidden="true"></i
     ></p>
-    <div class="field-group" v-show="communes && communes.length">
+    <div class="field-group" v-show="showCommunes">
       <label for="commune" class="aj-question"
         >Veuillez sélectionner la ville qui correspond
       </label>

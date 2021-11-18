@@ -135,7 +135,7 @@ export default {
     update: function (name) {
       this.currentState = stateManager(this.currentState, {
         element: name,
-        length: (this[name] && this[name].length) || 0,
+        length: this[name]?.length || 0,
       })
 
       const dt = moment(this.date, "YYYY-MM-DD", true)
@@ -148,19 +148,19 @@ export default {
   },
   watch: {
     day: function (to) {
-      if (to && to.length == 2 && this.auto) {
+      if (to?.length == 2 && this.auto) {
         this.$refs.month.focus()
       }
       this.update("day")
     },
     month: function (to) {
-      if (to && to.length == 2 && this.auto) {
+      if (to?.length == 2 && this.auto) {
         this.$refs.year.focus()
       }
       this.update("month")
     },
     year: function (to) {
-      if (to && to.length == 4 && this.auto) {
+      if (to?.length == 4 && this.auto) {
         this.$refs.year.focus()
       }
       this.update("year")

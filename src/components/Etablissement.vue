@@ -98,10 +98,7 @@ export default {
   },
   computed: {
     hasContact: function () {
-      return (
-        this.etablissement &&
-        (this.etablissement.url || this.etablissement.telephone)
-      )
+      return this.etablissement?.url || this.etablissement?.telephone
     },
   },
   methods: {

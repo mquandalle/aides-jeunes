@@ -1,6 +1,11 @@
 import Commune from "../lib/Commune"
 
 export default {
+  computed: {
+    showCommunes() {
+      return this.communes?.length
+    },
+  },
   asyncComputed: {
     communes: {
       get: function () {
@@ -11,12 +16,11 @@ export default {
         return Commune.get(this.codePostal)
           .then((communes) => {
             if (communes.length <= 0) {
-              this.$matomo &&
-                this.$matomo.trackEvent(
-                  "General",
-                  "Depcom introuvable",
-                  `Code postal : ${this.codePostal}`
-                )
+              this.$matomo?.trackEvent(
+                "General",
+                "Depcom introuvable",
+                `Code postal : ${this.codePostal}`
+              )
             }
             if (!communes.map((c) => c.nom).includes(this.nomCommune)) {
               this.nomCommune = Commune.getMostPopulated(communes).nom

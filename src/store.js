@@ -97,7 +97,7 @@ const storeAnswer = (answers, newAnswer, clean) => {
     const answer = answers[existingAnswerIndex]
     answer.value = newAnswer.value
     if (clean) {
-      if (newAnswer.id && newAnswer.id.startsWith("enfant_")) {
+      if (newAnswer.id?.startsWith("enfant_")) {
         // If we are changing info about a children
         // we want to keep the answer on others
         results = answers
@@ -123,10 +123,7 @@ const store = new Vuex.Store({
   state: defaultStore(),
   getters: {
     passSanityCheck: function (state, getters) {
-      return (
-        getters.situation.demandeur &&
-        getters.situation.demandeur.date_naissance
-      )
+      return getters.situation.demandeur?.date_naissance
     },
     getDebug: function (state) {
       return state.debug
@@ -279,7 +276,7 @@ const store = new Vuex.Store({
     addEnfant: function (state) {
       let enfantId
       let enfants
-      if (state.answers.enfants && state.answers.enfants.length > 0) {
+      if (state.answers.enfants?.length > 0) {
         enfantId = state.answers.enfants[state.answers.enfants.length - 1] + 1
         enfants = [...state.answers.enfants, enfantId]
       } else {
@@ -374,7 +371,7 @@ const store = new Vuex.Store({
     saveComputationFailure: function (state, error) {
       state.calculs.updating = false
       state.calculs.error = true
-      state.calculs.exception = (error.response && error.response.data) || error
+      state.calculs.exception = error.response?.data || error
     },
     setMessage: function (state, message, counter) {
       state.message = {
