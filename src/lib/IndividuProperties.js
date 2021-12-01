@@ -1,6 +1,6 @@
 import Individu from "@/../lib/Individu"
 import { capitalize, isRelevant, yearsAgo } from "@/lib/Utils"
-import Scolarite from "@/lib/Scolarite"
+import Scolarite from "@/../lib/Scolarite"
 
 const loadEntity = (component) => {
   const params = component.params || component.$route.params
@@ -92,82 +92,9 @@ const STEPS = {
     question: "Dans quelle classe êtes-vous actuellement ?",
     questionType: "enum",
     items: (component) => {
-      return [
-        {
-          value: "seconde",
-          label: "Seconde",
-          only: "lycee",
-        },
-        {
-          value: "premiere",
-          label: "Première",
-          only: "lycee",
-        },
-        {
-          value: "terminale",
-          label: "Terminale",
-          only: "lycee",
-        },
-        {
-          label: "BTS",
-          value: "bts_1",
-          only: "enseignement_superieur",
-        },
-        {
-          label: "BUT",
-          value: "but_1",
-          only: "enseignement_superieur",
-        },
-        {
-          label: "CPGE",
-          value: "cpge_1",
-          only: "enseignement_superieur",
-        },
-        {
-          label: "Licence - 1ère année",
-          value: "licence_1",
-          only: "enseignement_superieur",
-        },
-        {
-          label: "Licence - 2ème année",
-          value: "licence_2",
-          only: "enseignement_superieur",
-        },
-        {
-          label: "Licence - 3ème année",
-          value: "licence_3",
-          only: "enseignement_superieur",
-        },
-        {
-          label: "Master - 1ère année",
-          value: "master_1",
-          only: "enseignement_superieur",
-        },
-        {
-          label: "Master - 2ème année",
-          value: "master_2",
-          only: "enseignement_superieur",
-        },
-        {
-          label: "Doctorat - 1ère année",
-          value: "doctorat_1",
-          only: "enseignement_superieur",
-        },
-        {
-          label: "Doctorat - 2ème année",
-          value: "doctorat_2",
-          only: "enseignement_superieur",
-        },
-        {
-          label: "Doctorat - 3ème année",
-          value: "doctorat_3",
-          only: "enseignement_superieur",
-        },
-        {
-          label: "Autre",
-          value: "autre",
-        },
-      ].filter((item) => !item.only || item.only == component.entity.scolarite)
+      return Scolarite.annee_etude.filter(
+        (item) => !item.only || item.only === component.entity.scolarite
+      )
     },
   },
 

@@ -55,7 +55,7 @@
 import Actions from "@/components/Actions"
 import Nationality from "@/lib/Nationality"
 import EnSavoirPlus from "@/components/EnSavoirPlus"
-import Scolarite from "@/lib/Scolarite"
+import Scolarite from "@/../lib/Scolarite"
 
 export default {
   name: "SimulationEnfants",
