@@ -357,6 +357,16 @@ collections:
                         widget: select
                         multiple: true
                         options:
+                          - label: CAP - 1ère année
+                            value: cap_1
+                          - label: CAP - 2ème année
+                            value: cap_2
+                          - label: Seconde
+                            value: seconde
+                          - label: Première
+                            value: premiere
+                          - label: Terminale
+                            value: terminale
                           - label: BTS
                             value: bts_1
                           - label: BUT
